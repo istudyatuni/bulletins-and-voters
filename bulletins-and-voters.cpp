@@ -2,6 +2,7 @@
 #include <ctime>
 #include <cstdlib>
 #include <vector>
+#include <cmath>
 using namespace std;
 int main() {
   //  vector <int> c={1, 2, 36};
@@ -30,49 +31,63 @@ int main() {
             continue;
         }
     }
-    cout << "бюллетни:\n";
-    //генерация и проверка бюллетней
+    /*cout << "Введите бюллетни\n";
+    for (int i = 0; i < m; ++i){
+        cout << i << ": ";
+        cin >> bal[i];
+        if (bal[i].size() != n){
+            cout << "неверный размер. введите снова\n";
+            --i;
+        }
+    }*/
+    //генерация бюллетней
     for (int i = 0; i < m; i++) {
         int a = rand() % (n + 1);
         for (int j = 0; j < n; j++) {
             if (j == 0 && a == n) { //генерация недействительных (с отсутствующими метками)
                 bal[i] += ".";
-                ned++;    //недействительный бюллетень
             }
             else if (j == a && a != n) {
                 bal[i] += "X";
-                num[j]++; //количество за кандидата j
             }
             else bal[i] += ".";
         }
-        cout << a << ' ' << bal[i] << endl;
     }
-    /*for (int i = 0; i < m; ++i) { //с этим циклом дальше выполнение не идет
+    cout << "бюллетни:\n";
+    for (int i = 0; i < m; ++i){
+        cout << bal[i] << "\n";
+    }
+    for (int i = 0; i < m; ++i) {   //была запись bal[m][j]
         int a = 0;
+        char t;
+        int place;
         for (int j = 0; j < n; ++j) {
-            char t = bal[m][n];
-            if(t == 'X') {
+            t = bal[i][j];
+            if(t == 'X' || t == 'x') {
                 a++;
+                place = j;
             }
         }
         if (a != 1)
-            ned++;
-    }*/
-    //сортировка
-    for (int i = 0; i < n-2; i++) {
-      //  int mx = num[i];
-        for (int j = 0; j < n-2; j++) {
+            ned++;          //недействительный бюллетень
+        else {
+            num[place]++;   //количество за кандидата j
+        }
+    }
+    //сортировка пузырьком, для сохранения позиции равнозначных элементов
+    for (int i = 0; i < n-1; i++) {
+        for (int j = 0; j < n-1; j++) {
             if (num[j] > num[j+1]) {
-               // mx = num[j];
                 swap(num[j], num[j+1]);
                 swap(name[j], name[j+1]);
             }
         }
     }
+    //round() - математически правильное округление
     for (int i = 0; i < n; i++) {
-        cout << name[i] << "  " << num[i] << "  " << 100 * num[i] / double(m) << "%\n";
+        cout << name[i] << "  " << num[i] << "  " << round(100 * num[i] / double(m)) << "%\n";
     }
-    cout << "недействительны " << ned << "  " << 100 * ned / double(m) << "%";
+    cout << "недействительны " << ned << "  " << round(100 * ned / double(m)) << "%";
     
     return 0;
 }
