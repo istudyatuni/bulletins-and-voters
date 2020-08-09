@@ -1,6 +1,5 @@
 #include <iostream>
 #include <ctime>
-#include <cstring>
 #include <cstdlib>
 #include <vector>
 using namespace std;
@@ -20,41 +19,45 @@ int main() {
         cin >> m;
     } while (m < 1 || m > 1000);
     vector<string> name(n);     //массив для имен кандидатов
-    vector<int> num(n);              //для количества голосов каждого кандидата
-    if (n >= 2 && n <= 10 && m >= 1 && m <= 1000) {
-        for (int i = 0; i < n; ++i) { //ввод имен
-            cout << "введите " << i + 1 << "-е имя: ";
-            cin >> name[i];
-            if (name[i] == "wrong") {
-                cout << "нельзя имя wrong\n";
-                --i;
-                continue;
-            }
-        }
-        cout << "бюллетни:\n";
-        //генерация и проверка бюллетней
-        for (int i = 0; i < m; i++) {
-            string bul = "";
-            int a = rand() % (n + 1);
-            for (int j = 0; j < n; j++) {
-                if (i == 0)
-                    num[j] = 0;
-                if (j == a) {//генерация недействительных
-                    if (a != n) {
-                        bul += "X";
-                        num[j]++; //количество за кандидата j
-                    } else {
-                        bul += ".";
-                        cout<<"p";
-                        ned++; //недействительный бюллетень
-                    }
-                }
-                else
-                    bul += ".";
-            }
-            cout << bul << endl;
+    vector<string> bal(m, "");
+    vector<int> num(n, 0);              //для количества голосов каждого кандидата
+    for (int i = 0; i < n; ++i) { //ввод имен
+        cout << "введите " << i + 1 << "-е имя: ";
+        cin >> name[i];
+        if (name[i] == "wrong" || name[i] == "Wrong") {
+            cout << "нельзя имя "<< name[i] <<"\n";
+            --i;
+            continue;
         }
     }
+    cout << "бюллетни:\n";
+    //генерация и проверка бюллетней
+    for (int i = 0; i < m; i++) {
+        int a = rand() % (n + 1);
+        for (int j = 0; j < n; j++) {
+            if (j == 0 && a == n) { //генерация недействительных (с отсутствующими метками)
+                bal[i] += ".";
+                ned++;    //недействительный бюллетень
+            }
+            else if (j == a && a != n) {
+                bal[i] += "X";
+                num[j]++; //количество за кандидата j
+            }
+            else bal[i] += ".";
+        }
+        cout << a << ' ' << bal[i] << endl;
+    }
+    /*for (int i = 0; i < m; ++i) { //с этим циклом дальше выполнение не идет
+        int a = 0;
+        for (int j = 0; j < n; ++j) {
+            char t = bal[m][n];
+            if(t == 'X') {
+                a++;
+            }
+        }
+        if (a != 1)
+            ned++;
+    }*/
     //сортировка
     for (int i = 0; i < n-2; i++) {
       //  int mx = num[i];
@@ -70,6 +73,5 @@ int main() {
         cout << name[i] << "  " << num[i] << "  " << 100 * num[i] / double(m) << "%\n";
     }
     cout << "недействительны " << ned << "  " << 100 * ned / double(m) << "%";
-f1:
     return 0;
 }
