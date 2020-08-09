@@ -4,56 +4,69 @@
 #include <vector>
 #include <cmath>
 using namespace std;
+
 int main() {
-  //  vector <int> c={1, 2, 36};
-  //  for (int x : c)
-   //     cout << x << endl;
-    srand(time(NULL));
     int m, n, ned = 0; //ned-ействительные бюллетни
-    cout << "Введите количество кандидатов и бюллетней\n";
+    cout << "Введите количество кандидатов\n";
     do {
         cout << "2 <= n <= 10: ";
         cin >> n;
     } while (n < 2 || n > 10);
+    cout << "Введите количество бюллетней\n";
     do {
         cout << "1 <= m <= 1000: ";
         cin >> m;
     } while (m < 1 || m > 1000);
+
     vector<string> name(n);     //массив для имен кандидатов
     vector<string> bal(m, "");
     vector<int> num(n, 0);              //для количества голосов каждого кандидата
     for (int i = 0; i < n; ++i) { //ввод имен
-        cout << "введите " << i + 1 << "-е имя: ";
+        cout << "Введите " << i + 1 << "-е имя: ";
         cin >> name[i];
         if (name[i] == "wrong" || name[i] == "Wrong") {
-            cout << "нельзя имя "<< name[i] <<"\n";
+            cout << "Нельзя имя "<< name[i] <<"\n";
             --i;
             continue;
         }
     }
-    /*cout << "Введите бюллетни\n";
-    for (int i = 0; i < m; ++i){
-        cout << i << ": ";
-        cin >> bal[i];
-        if (bal[i].size() != n){
-            cout << "неверный размер. введите снова\n";
-            --i;
-        }
-    }*/
-    //генерация бюллетней
-    for (int i = 0; i < m; i++) {
-        int a = rand() % (n + 1);
-        for (int j = 0; j < n; j++) {
-            if (j == 0 && a == n) { //генерация недействительных (с отсутствующими метками)
-                bal[i] += ".";
+
+    cout << "Использовать автогенерацию бюллетней (для проверки)? [y, n]: ";
+    char gen;
+    cin >> gen;
+    if (gen != 'y' && gen != 'n') {
+        cout << "Неверный ввод. Автогенерация\n";
+        gen = 'y';
+    }
+
+    if (gen == 'n') {
+        cout << "Введите бюллетни. X или x (англ) в качестве метки\n";
+        for (int i = 0; i < m; ++i){
+            cout << i << ": ";
+            cin >> bal[i];
+            if (bal[i].size() != n){
+                cout << "Неверный размер. Введите снова\n";
+                --i;
             }
-            else if (j == a && a != n) {
-                bal[i] += "X";
-            }
-            else bal[i] += ".";
         }
     }
-    cout << "бюллетни:\n";
+    else if (gen == 'y') {
+        //генерация бюллетней
+        srand(time(NULL));
+        for (int i = 0; i < m; i++) {
+            int a = rand() % (n + 1);
+            for (int j = 0; j < n; j++) {
+                if (j == 0 && a == n) { //генерация недействительных (с отсутствующими метками)
+                    bal[i] += ".";
+                }
+                else if (j == a && a != n) {
+                    bal[i] += "X";
+                }
+                else bal[i] += ".";
+            }
+        }
+    }
+    cout << "Бюллетни:\n";
     for (int i = 0; i < m; ++i){
         cout << bal[i] << "\n";
     }
@@ -87,7 +100,7 @@ int main() {
     for (int i = 0; i < n; i++) {
         cout << name[i] << "  " << num[i] << "  " << round(100 * num[i] / double(m)) << "%\n";
     }
-    cout << "недействительны " << ned << "  " << round(100 * ned / double(m)) << "%";
-    
+    cout << "Недействительны " << ned << "  " << round(100 * ned / double(m)) << "%";
+
     return 0;
 }
